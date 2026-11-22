@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="uz"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Tarix Online</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+:root{--card:#121838e0;--tx:#f6f1e4;--mut:#aeb6d8;--pri:#e8a736;--ok:#35c47c;--bad:#e5645e;--line:#ffffff24}
+*{box-sizing:border-box;margin:0;-webkit-tap-highlight-color:transparent}
+body{background:#0e1736;color:var(--tx);font:16px/1.4 system-ui,-apple-system,Roboto,sans-serif;padding-bottom:100px}
+#app{padding:14px;max-width:560px;margin:auto}
+h1{font-size:23px}h2{font-size:18px;margin:16px 0 8px}h3{font-size:16px}.mut{color:var(--mut);font-size:14px}
+.card{background:var(--card);border-radius:18px;padding:14px;margin-bottom:12px;border:1px solid var(--line)}
+.hero{background:linear-gradient(160deg,#16306bee,#2a2a7aee);border-radius:22px;padding:16px;margin-bottom:12px;border:1px solid var(--line)}
+.stats{display:flex;gap:8px;margin:12px 0}.stats div{flex:1;background:#ffffff1f;border-radius:14px;padding:8px 10px}.stats b{font-size:22px;display:block;color:var(--pri)}
+.path{display:flex;align-items:center;margin:14px 0 4px}.node{width:16px;height:16px;border-radius:50%;background:#ffffff44;border:2px solid #fff8}.node.on{background:var(--ok);border-color:#fff}.seg{flex:1;height:3px;background:#ffffff33}
+.bars{display:flex;gap:4px;margin-top:6px}.bars i{flex:1;height:8px;border-radius:4px;background:#ffffff33}.bars i.on{background:#b9a8ff}
+.lbl{display:flex;justify-content:space-between;font-size:12px;margin-top:3px}
+.btn{display:block;width:100%;border:0;border-radius:14px;padding:14px;font-size:16px;font-weight:700;background:#fff;color:#16306b;margin-top:12px}.btn.p{background:var(--pri);color:#1a1a2e}.btn.g{background:var(--line);color:var(--tx)}
+.row{display:flex;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}.row:last-child{border:0}.row .g{flex:1}
+.ic{min-width:42px;height:42px;border-radius:12px;background:#4a69d8;color:#fff;display:grid;place-items:center;font-weight:800}.ic.w{background:#b4540e}.ic.s{background:var(--line);color:var(--mut)}
+.books{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.bk{border-radius:12px;padding:10px 8px;background:#e6e9f8;color:#1c2b66;min-height:130px;border-left:6px solid #4a69d8;font-size:13px}.bk.w{background:#f6e6dc;color:#6b3009;border-color:#b4540e}
+.bk.soon{background:#12183899;color:var(--mut);border:1px dashed var(--mut)}.bk b{font-size:30px;display:block;line-height:1}
+.tabs{display:flex;gap:4px;background:#ffffff1a;border-radius:14px;padding:4px;margin-bottom:12px;overflow-x:auto}
+.tabs button{flex:1;border:0;background:none;color:var(--tx);padding:9px 10px;border-radius:10px;font-size:14px;white-space:nowrap}.tabs .on{background:#121838;font-weight:700;box-shadow:0 0 0 2px var(--pri) inset}
+nav{position:fixed;bottom:0;left:0;right:0;background:#0b1029f2;border-top:1px solid var(--line);display:flex;padding:6px 4px calc(6px + env(safe-area-inset-bottom,0px));z-index:5}
+nav button{flex:1;border:0;background:none;color:var(--mut);font-size:11px;padding:6px 0;border-radius:12px}nav button span{display:block;font-size:21px}nav .on{color:var(--pri);font-weight:700;background:#ffffff14}
+.opt{display:block;width:100%;text-align:left;border:2px solid var(--line);background:var(--card);color:var(--tx);border-radius:14px;padding:13px;margin:8px 0;font-size:16px}.opt.c{text-align:center}.opt.sel{border-color:var(--pri);background:#e8a73633}
+.opt.ok{border-color:var(--ok);background:#35c47c33}.opt.bad{border-color:var(--bad);background:#e5645e33}
+.bar{height:8px;border-radius:4px;background:var(--line);overflow:hidden}.bar i{display:block;height:100%;background:var(--pri)}
+.big{font-size:52px;font-weight:800;text-align:center}
+input,select,textarea{width:100%;padding:12px;border-radius:12px;border:1px solid var(--line);background:#0b1029;color:var(--tx);font:16px inherit;margin:4px 0 10px}
+.me{background:#e8a73633;border-radius:10px}.rk{width:30px;font-weight:800;color:var(--mut)}
+.toast{position:fixed;left:50%;bottom:100px;transform:translateX(-50%);background:#000c;color:#fff;padding:10px 16px;border-radius:20px;font-size:14px;z-index:9}
+/* tarixiy fon */
+#bg{position:fixed;inset:0;z-index:-1;overflow:hidden;background:linear-gradient(180deg,#0e1736 0%,#2b2a6b 45%,#a4506b 80%,#e8a05a 100%)}
+#bg .st{position:absolute;inset:0;background-image:radial-gradient(1.5px 1.5px at 20% 15%,#fff,transparent),radial-gradient(1.5px 1.5px at 70% 8%,#fff,transparent),radial-gradient(1px 1px at 45% 30%,#fff,transparent),radial-gradient(1.5px 1.5px at 85% 35%,#fff,transparent),radial-gradient(1px 1px at 10% 45%,#fff,transparent),radial-gradient(1px 1px at 58% 20%,#fff,transparent);animation:tw 4s ease-in-out infinite alternate}
+@keyframes tw{from{opacity:.25}to{opacity:1}}
+.moon{position:absolute;width:64px;height:64px;border-radius:50%;background:#f6e7b4;box-shadow:0 0 50px #f6e7b4aa;left:14%;top:62%;animation:rise 60s ease-in-out infinite alternate}
+@keyframes rise{to{transform:translateY(-38vh)}}
+.cl{position:absolute;height:24px;width:120px;border-radius:30px;background:#ffffff1c;animation:drift 70s linear infinite}
+@keyframes drift{from{transform:translateX(-160px)}to{transform:translateX(110vw)}}
+.orn{position:absolute;right:-100px;top:10%;width:280px;opacity:.13;animation:spin 120s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+#bg .sk{position:absolute;bottom:0;width:100%;height:140px}
+@media(prefers-reduced-motion:reduce){#bg *{animation:none!important}}
+</style></head><body>
+<div id="bg"><div class="st"></div><div class="moon"></div>
+<div class="cl" style="top:18%"></div><div class="cl" style="top:34%;width:90px;animation-delay:-30s;animation-duration:95s"></div>
+<svg class="orn" viewBox="0 0 100 100"><g fill="none" stroke="#f6e7b4" stroke-width="1.2"><rect x="20" y="20" width="60" height="60"/><rect x="20" y="20" width="60" height="60" transform="rotate(45 50 50)"/><circle cx="50" cy="50" r="30"/><circle cx="50" cy="50" r="12"/></g></svg>
+<svg class="sk" viewBox="0 0 400 130" preserveAspectRatio="xMidYMax slice"><g fill="#0b1029"><rect y="104" width="400" height="26"/><rect x="28" y="50" width="12" height="80"/><path d="M28 50L34 34L40 50Z"/><rect x="360" y="50" width="12" height="80"/><path d="M360 50L366 34L372 50Z"/><rect x="110" y="86" width="180" height="44"/><path d="M148 86Q200 14 252 86Z"/><path d="M88 104Q108 70 128 104Z"/><path d="M272 104Q292 70 312 104Z"/><rect x="198" y="8" width="4" height="22"/></g></svg></div>
+<div id="app"></div><nav id="nav"></nav>
+<script>
+const tg=window.Telegram&&Telegram.WebApp;if(tg){tg.ready();tg.expand()}
+const $=s=>document.querySelector(s),app=$('#app');
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const VIL=["Qoraqalpogʻiston","Andijon","Buxoro","Fargʻona","Jizzax","Xorazm","Namangan","Navoiy","Qashqadaryo","Samarqand","Sirdaryo","Surxondaryo","Toshkent viloyati","Toshkent shahri"];
+const MON=["yanvar","fevral","mart","aprel","may","iyun","iyul","avgust","sentyabr","oktyabr","noyabr","dekabr"];
+const SOON=[[6,'Tarix',2022],[7,'Oʻzbekiston tarixi',2022],[8,'Oʻzbekiston tarixi',2023],[8,'Jahon tarixi',2024],[7,'Jahon tarixi',2022],[9,'Oʻzbekiston tarixi',2024],[9,'Jahon tarixi',2024],[10,'Oʻzbekiston tarixi',2022],[10,'Jahon tarixi',2022],[11,'Oʻzbekiston tarixi',2025],[11,'Jahon tarixi',2025]];
+/* kontent (admin qoʻshadi): {books:[{id,g,n,y,topics:[{n,q:[[savol,[variantlar],toʻgʻri_indeks]]}]}]} */
+let C={books:[]};try{C=JSON.parse(localStorage.getItem('tc'))||C}catch(e){}
+fetch('content.json?t='+(Date.now()/6e4|0)).then(r=>r.json()).then(j=>{C=j;try{localStorage.setItem('tc',JSON.stringify(j))}catch(e){}if(!Z&&(tab=='home'||tab=='fan'))render()}).catch(()=>{});
+const RB=()=>C.books.filter(b=>(b.topics||[]).some(t=>(t.q||[]).length));
+const nq=b=>b.topics.reduce((a,t)=>a+(t.q||[]).length,0);
+const def={name:(tg&&tg.initDataUnsafe&&tg.initDataUnsafe.user&&tg.initDataUnsafe.user.first_name)||'Doʻst',grade:11,vil:VIL[13],tum:'',hours:0,tg:'',xp:0,txp:0,streak:0,day:'',last:'',tests:0,cor:0,tot:0,hist:[],done:{},learn:{},p1:0,p2:0,book:0};
+let S;try{S={...def,...JSON.parse(localStorage.getItem('to')||'{}')}}catch(e){S={...def}}
+const save=()=>{try{localStorage.setItem('to',JSON.stringify(S))}catch(e){}};
+let D={};try{const p=new URLSearchParams(location.search).get('d');if(p){const b=atob(p.replace(/-/g,'+').replace(/_/g,'/'));D=JSON.parse(new TextDecoder().decode(Uint8Array.from(b,c=>c.charCodeAt(0))))}}catch(e){}
+if(D.me&&D.me.n)S.name=D.me.n;
+const today=()=>new Date().toDateString();
+function touch(){const t=today();if(S.day!==t){const y=new Date(Date.now()-864e5).toDateString();S.streak=S.last===y?S.streak+1:1;S.day=t;S.txp=0;S.p1=0;S.p2=0}S.last=t}
+function addXp(n){touch();S.xp+=n;S.txp+=n;save()}
+const toast=m=>{const e=document.createElement('div');e.className='toast';e.textContent=m;document.body.appendChild(e);setTimeout(()=>e.remove(),2400)};
+const avg=()=>S.tot?Math.round(S.cor/S.tot*100):0;
+const GR=[[90,'A+'],[80,'A'],[70,'B+'],[60,'B'],[50,'C+'],[40,'C']];
+const grade=p=>(GR.find(g=>p>=g[0])||[0,'—'])[1];
+function send(o){const j=JSON.stringify(o);if(!tg||!tg.initData){toast('Ilovani Telegram ichida oching');return}if(new Blob([j]).size>4000){toast('Hajm katta: qisqartiring');return}tg.sendData(j)}
+let tab='home',sub='',Z=null,ptab='nat',rtab='tuman',atab='book',sv={h:0,g:''};
+const NAV=[['home','⌂','Bosh'],['fan','📖','Fan'],['exam','⏱','Imtihon'],['rate','🏆','Reyting'],['prof','👤','Profil']];
+if(D.adm)NAV.push(['admin','⚙','Admin']);
+function go(t){tab=t;sub='';Z=null;render()}
+function render(){touch();
+$('#nav').innerHTML=NAV.map(n=>`<button class="${tab==n[0]?'on':''}" onclick="go('${n[0]}')"><span>${n[1]}</span>${n[2]}</button>`).join('');
+$('#nav').style.display=Z?'none':'flex';
+if(tab=='home'&&(!S.hours||!S.tg))vSurvey();else({home:vHome,fan:vFan,exam:vExam,rate:vRate,prof:vProf,admin:vAdmin})[tab]();window.scrollTo(0,0)}
+/* ===== SOʻROVNOMA ===== */
+function vSurvey(){$('#nav').style.display='none';const G=['C','C+','B','B+','A','A+'];
+app.innerHTML=`<h1>Oʻquv dasturini tuzamiz</h1><p class="mut">2 ta savolga javob bering – dastur sizga moslab tuziladi.</p>
+<h2>Kuniga tarixga necha soat ajrata olasiz?</h2><div class="tabs">${[1,2,3,5].map(h=>`<button class="${sv.h==h?'on':''}" onclick="sv.h=${h};vSurvey()">${h==5?'5+':h} soat</button>`).join('')}</div>
+<h2>Qaysi darajagacha chiqmoqchisiz?</h2><div class="books">${G.map(g=>`<button class="opt c ${sv.g==g?'sel':''}" onclick="sv.g='${g}';vSurvey()"><b>${g}</b></button>`).join('')}</div>
+<button class="btn p" onclick="saveSv()">Dasturni koʻrish</button>`}
+function saveSv(){if(!sv.h||!sv.g){toast('Ikkala savolga ham javob bering');return}S.hours=sv.h;S.tg=sv.g;save();$('#nav').style.display='flex';render()}
+const TP={C:40,'C+':50,B:60,'B+':70,A:80,'A+':90};
+function plan(){const b=RB()[0],tp=b?b.topics.length:0,m=S.hours*60,t=Math.round(m*.5),qa=Math.round(m*.3),pc=TP[S.tg]||90;
+return{tp,pc,per:Math.max(1,Math.round(S.hours*7/3)),t,qa,rep:m-t-qa,
+tip:pc>=80?`Har mavzuni ${pc}%+ bilan yopmaguncha keyingisiga oʻtmang. Haftada 2 ta aralash imtihon ishlang.`:pc>=60?'Avval barcha mavzularni oʻting, keyin xatolar ustida ishlang.':'Asosiy mavzularga e’tibor bering va har kuni takrorlang.'}}
+/* ===== BOSH ===== */
+function vHome(){const b=RB()[0],tp=b?b.topics:[],pl=S.p1+S.p2,ln=Object.keys(S.learn).length,p=avg(),P=plan(),bi=GR.findIndex(g=>p>=g[0]);
+app.innerHTML=`<h1>Xush kelibsiz, ${esc(S.name)}!</h1><p class="mut">${S.grade}-sinf · ${new Date().toLocaleDateString('uz-UZ',{day:'numeric',month:'long'})}</p>
+<div class="hero" style="margin-top:12px"><h2 style="margin:0">Tarix yoʻlingiz</h2><div style="font-size:44px;font-weight:800">${ln}</div><div style="color:#cfd6f5">savol oʻzlashtirildi</div>
+${tp.length?`<div class="path">${tp.map((t,i)=>`${i?'<div class="seg"></div>':''}<div class="node ${S.done[b.id+'_'+i]?'on':''}"></div>`).join('')}</div>`:'<p class="mut" style="margin-top:10px">Mavzular tez orada qoʻshiladi</p>'}
+<div class="stats"><div><b>+${S.txp}</b>XP bugun</div><div><b>${pl}/2</b>reja</div><div><b>${S.streak}</b>kun seriya</div></div>
+<div class="lbl"><span>Prognoz: ${S.tests>=3?grade(p):'aniqlanmoqda '+S.tests+'/3'}</span><span>Maqsad ${S.tg}</span></div>
+<div class="bars">${['C','C+','B','B+','A','A+'].map((g,i)=>`<i class="${i==['C','C+','B','B+','A','A+'].indexOf(S.tg)||(S.tests>=3&&bi>=0&&i>=5-bi)?'on':''}"></i>`).join('')}</div>
+<div class="lbl">${['C','C+','B','B+','A','A+'].map(g=>`<span>${g}</span>`).join('')}</div>
+<button class="btn" onclick="startQA(0)">Savol-javobni boshlash</button></div>
+<div class="card"><h3>Sizning oʻquv dasturingiz</h3><p class="mut" style="margin:6px 0">Maqsad: ${S.tg} daraja (kamida ${P.pc}% natija)</p>
+<div class="row"><div class="g">Kuniga ${S.hours==5?'5+':S.hours} soat: testlar ${P.t} daq · savol-javob ${P.qa} daq · takrorlash ${P.rep} daq</div></div>
+<div class="row"><div class="g">Haftasiga ${P.per} ta mavzu${P.tp?` (jami ${P.tp} ta)`:''}</div></div><div class="row"><div class="g mut">${P.tip}</div></div></div>
+<div class="card"><div style="display:flex;justify-content:space-between"><h3>Siz uchun bugun</h3><span class="mut">${pl}/2 bajarildi</span></div>
+<div class="row" onclick="go('fan')"><div class="ic" style="background:${S.p1?'#1f9d63':'#4a69d8'}">${S.p1?'✓':'T'}</div><div class="g"><b>Mavzu mashqi</b><div class="mut">10 ta test, ~10 daqiqa</div></div></div>
+<div class="row" onclick="startQA(0)"><div class="ic" style="background:${S.p2?'#1f9d63':'#1f8f6f'}">${S.p2?'✓':'?'}</div><div class="g"><b>Savol-javob</b><div class="mut">10 ta savol, ~10 daqiqa</div></div></div></div>`}
+/* ===== FAN ===== */
+function vFan(){if(sub=='book')return vBook();if(sub=='topics')return vTopics();const R=RB(),nr=C.books.filter(b=>!R.includes(b)).map(b=>[b.g,b.n,b.y]);
+const soon=[...SOON.filter(s=>!R.some(b=>b.g==s[0]&&b.n==s[1]&&b.y==s[2])&&!nr.some(n=>n[0]==s[0]&&n[1]==s[1]&&n[2]==s[2])),...nr];
+app.innerHTML=`<h1>Fan</h1><div class="tabs"><button class="on">Tarix</button></div><h2>Kitoblar</h2>
+${R.length?`<p class="mut">${R.reduce((a,b)=>a+nq(b),0).toLocaleString('uz-UZ')} ta test</p><div class="books" style="margin-top:8px">${R.map(b=>`<div class="bk ${/jahon/i.test(b.n)?'w':''}" onclick="S.book=${b.id};sub='book';render()"><b>${b.g}<small>-sinf</small></b>${esc(b.n)}<br><br>${b.y}<br>${nq(b).toLocaleString('uz-UZ')} ta test</div>`).join('')}</div>`:'<p class="mut">Hozircha tayyor kitob yoʻq. Testlar tez orada qoʻshiladi.</p>'}
+<h2>Tez orada</h2><p class="mut">Bu kitoblar testlari tayyorlanmoqda</p><div class="books" style="margin-top:8px">${soon.map(b=>`<div class="bk soon"><b>${b[0]}<small>-sinf</small></b>${esc(b[1])}<br>${b[2]}<br>Tez orada</div>`).join('')}</div>`}
+const BK=()=>C.books.find(b=>b.id==S.book)||RB()[0];
+function vBook(){const b=BK();app.innerHTML=`<button class="tabs" style="border:0;padding:8px 14px" onclick="sub='';render()">← Orqaga</button><div class="row"><div class="ic">${b.g}</div><div><h1>${esc(b.n)}</h1><div class="mut">${b.g}-sinf, ${b.y}</div></div></div>
+<div class="card"><div class="row" onclick="sub='topics';render()"><div class="g"><b>Testlar</b><div class="mut">${b.topics.length} mavzu, ${nq(b)} ta test</div></div>›</div><div class="row" onclick="startQA(${b.id})"><div class="g"><b>Savol-javob</b><div class="mut">Javobi bilan oʻrganish</div></div>›</div>
+<div class="row"><div class="g"><b>Qoʻllanmalar</b><div class="mut">Tayyorlanmoqda</div></div><span class="mut">Tez orada</span></div><div class="row"><div class="g"><b>Darslar</b><div class="mut">Tayyorlanmoqda</div></div><span class="mut">Tez orada</span></div></div>`}
+function vTopics(){const b=BK();app.innerHTML=`<button class="tabs" style="border:0;padding:8px 14px" onclick="sub='book';render()">← Orqaga</button><h1>Testlar</h1><p class="mut">${b.topics.length} ta mavzu</p><div class="card">${b.topics.map((t,i)=>`<div class="row" onclick="startQuiz(${b.id},${i})"><div class="ic ${S.done[b.id+'_'+i]?'':'s'}" style="${S.done[b.id+'_'+i]?'background:#1f9d63':''}">${S.done[b.id+'_'+i]?'✓':i+1}</div><div class="g"><b>${esc(t.n)}</b><div class="mut">${(t.q||[]).length} ta test</div></div></div>`).join('')}</div>`}
+/* ===== TEST / SAVOL-JAVOB ===== */
+function shuffle(a){a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a}
+function pool(bid,ti){const b=C.books.find(x=>x.id==bid)||RB()[0];if(!b)return[];const ts=ti==null?b.topics.map((t,i)=>i):[ti];return ts.flatMap(i=>(b.topics[i].q||[]).map((q,j)=>[...q,b.id+'_'+i+'_'+j]))}
+function startQuiz(bid,ti,exam){const b=RB()[0];const L=shuffle(pool(bid||(b&&b.id),ti)).slice(0,10);if(!L.length){toast('Savollar tez orada qoʻshiladi');return}
+Z={bid,ti,L,i:0,sc:0,exam:!!exam,left:600};if(exam)Z.tm=setInterval(()=>{Z.left--;const e=$('#tm');if(e)e.textContent=Math.floor(Z.left/60)+':'+String(Z.left%60).padStart(2,'0');if(Z.left<=0)finish()},1000);render0()}
+function render0(){$('#nav').style.display='none';Z.i>=Z.L.length?finish():q()}
+function q(){const [s,o,c]=Z.L[Z.i];const ord=shuffle(o.map((x,i)=>i));Z.c=c;
+app.innerHTML=`<div style="display:flex;justify-content:space-between"><button class="tabs" style="border:0;padding:6px 12px" onclick="quit()">✕</button><b>${Z.i+1}/${Z.L.length}</b><span id="tm" class="mut">${Z.exam?'10:00':''}</span></div><div class="bar"><i style="width:${Z.i/Z.L.length*100}%"></i></div>
+<h2 style="margin-top:18px">${esc(s)}</h2>${ord.map(i=>`<button class="opt" data-i="${i}" onclick="ans(this,${i})">${esc(o[i])}</button>`).join('')}`}
+function ans(el,i){if(Z.lock)return;Z.lock=1;const ok=i==Z.c;if(ok)Z.sc++;el.classList.add(ok?'ok':'bad');
+if(!ok)document.querySelector(`[data-i="${Z.c}"]`).classList.add('ok');try{tg&&tg.HapticFeedback.notificationOccurred(ok?'success':'error')}catch(e){}
+setTimeout(()=>{Z.lock=0;Z.i++;render0()},850)}
+function quit(){clearInterval(Z&&Z.tm);Z=null;render()}
+function finish(){clearInterval(Z.tm);const n=Z.L.length,p=Math.round(Z.sc/n*100),xp=Z.sc*4+(p>=70?10:0);
+addXp(xp);S.tests++;S.cor+=Z.sc;S.tot+=n;S.hist.push({d:new Date().toLocaleDateString('uz-UZ'),p,t:Z.exam?'Imtihon':'Test'});S.hist=S.hist.slice(-20);
+if(Z.ti!=null&&p>=70)S.done[Z.bid+'_'+Z.ti]=1;if(!Z.exam)S.p1=1;save();const ex=Z.exam;
+app.innerHTML=`<div class="card" style="margin-top:30px;text-align:center"><p class="mut">Natija</p><div class="big">${p}%</div><h2>${Z.sc}/${n} toʻgʻri · baho ${grade(p)}</h2><p class="mut">+${xp} XP</p>
+${ex?`<button class="btn p" onclick="sendRes()">Natijani botga yuborish (reyting)</button>`:''}<button class="btn g" onclick="Z=null;go('home')">Bosh sahifa</button></div>`;Z=null}
+function startQA(b0){const L=shuffle(pool(b0||(RB()[0]||{}).id)).slice(0,10);if(!L.length){toast('Savollar tez orada qoʻshiladi');return}Z={qa:1,L,i:0};qa()}
+function qa(){$('#nav').style.display='none';if(Z.i>=Z.L.length){S.p2=1;addXp(Z.L.length*2);Z=null;toast('+XP qoʻshildi');go('home');return}
+const [s]=Z.L[Z.i];app.innerHTML=`<div style="display:flex;justify-content:space-between"><button class="tabs" style="border:0;padding:6px 12px" onclick="Z=null;go('home')">✕</button><b>${Z.i+1}/${Z.L.length}</b><span></span></div><div class="card" style="margin-top:14px"><h2 style="margin:0">${esc(s)}</h2><div id="a" style="margin-top:16px"></div></div><button class="btn p" id="sh" onclick="showA()">Javobni koʻrish</button>`}
+function showA(){const [s,o,c,id]=Z.L[Z.i];$('#a').innerHTML=`<div class="opt ok">${esc(o[c])}</div>`;const b=$('#sh');b.textContent='Bildim, keyingisi';b.onclick=()=>{S.learn[id]=1;save();Z.i++;qa()}}
+/* ===== IMTIHON ===== */
+function vExam(){app.innerHTML=`<h1>Imtihon</h1><div class="tabs"><button class="on">Tarix</button></div>
+<div class="card"><h3>Vaqtli test</h3><p class="mut" style="margin:6px 0">10 ta savol, 10 daqiqa. Natija reytingga qoʻshiladi.</p><button class="btn p" onclick="startQuiz(0,null,1)">Imtihonni boshlash</button></div>
+<p class="mut">Testlari tayyorlanmoqda</p><div class="card">${[[7,'Jahon tarixi'],[9,'Oʻzbekiston tarixi, Jahon tarixi'],[10,'Oʻzbekiston tarixi, Jahon tarixi'],[11,'Oʻzbekiston tarixi, Jahon tarixi']].map(b=>`<div class="row"><div class="ic s">${b[0]}</div><div class="g"><b>${b[0]}-sinf</b><div class="mut">${b[1]}</div></div></div>`).join('')}</div>
+<p class="mut">Boshqa imtihonlar</p><div class="card"><div class="row"><div class="g"><b>Milliy sertifikat</b><div class="mut">Haqiqiy imtihon shaklida, vaqt bilan</div></div><span class="mut">Tez orada</span></div><div class="row"><div class="g"><b>Attestatsiya</b><div class="mut">Oʻqituvchilar uchun toifa imtihoni</div></div><span class="mut">Tez orada</span></div></div>`}
+function sendRes(){send({name:S.name,vil:S.vil,tum:S.tum,grade:S.grade,xp:S.xp,tests:S.tests,cor:S.cor,tot:S.tot})}
+/* ===== REYTING ===== */
+function vRate(){const T=[['guruh','Guruh'],['tuman','Tuman'],['vil','Viloyat'],['resp','Respublika']];const L=D[rtab]||[];
+app.innerHTML=`<h1>Reyting</h1><div class="tabs">${T.map(t=>`<button class="${rtab==t[0]?'on':''}" onclick="rtab='${t[0]}';render()">${t[1]}</button>`).join('')}</div>`+
+(L.length?`<div class="card">${L.map((r,i)=>`<div class="row ${r[2]?'me':''}"><div class="rk">${i+1}</div><div class="g"><b>${esc(r[0])}</b></div><b>${r[1]} XP</b></div>`).join('')}</div>${D.rank?`<p class="mut">Sizning oʻrningiz: ${D.rank[rtab]||'–'}</p>`:''}`:
+`<div class="card" style="text-align:center;padding:40px 20px"><div style="font-size:40px">🏆</div><h3>Reyting hali ochilmagan</h3><p class="mut">Imtihon ishlab turing – natijalaringiz saqlanadi va reyting ochilganda shu yerda chiqadi.</p><button class="btn p" onclick="go('exam')">Imtihonga oʻtish</button></div>`)}
+/* ===== PROFIL ===== */
+const ACH=[['Birinchi qadam','1 ta test ishlang',()=>S.tests>=1],['Seriya','3 kun ketma-ket',()=>S.streak>=3],['Bilimdon','100 XP toʻplang',()=>S.xp>=100],['Aniq nishon','Oʻrtacha 80%+ (3 urinishdan soʻng)',()=>S.tests>=3&&avg()>=80],['Qiziquvchan','10 ta savol oʻzlashtiring',()=>Object.keys(S.learn).length>=10]];
+function vProf(){const P=[['nat','Natijalar'],['yut','Yutuqlar'],['soz','Sozlamalar']];let b='';
+if(ptab=='nat')b=`<div class="card" style="display:flex;text-align:center"><div style="flex:1"><div class="big" style="font-size:30px">${S.tests}</div><span class="mut">ta urinish</span></div><div style="flex:1"><div class="big" style="font-size:30px">${avg()} %</div><span class="mut">oʻrtacha</span></div><div style="flex:1"><div class="big" style="font-size:30px">${S.xp}</div><span class="mut">XP</span></div></div>
+<h2>Fanlar boʻyicha</h2><div class="card">${RB().length?RB().map(k=>{const n=Object.keys(S.learn).filter(x=>x.startsWith(k.id+'_')).length,t=nq(k);return`<div class="row"><div class="ic">${k.g}</div><div class="g"><b>${k.g}-sinf «${esc(k.n)}» (${k.y})</b><div class="bar" style="margin:6px 0"><i style="width:${n/t*100}%"></i></div><span class="mut">${t} ta testdan ${n} tasi ishlangan</span></div></div>`}).join(''):'<p class="mut">Kitoblar tez orada</p>'}</div>
+<h2>Soʻnggi natijalar</h2><div class="card">${S.hist.length?S.hist.slice().reverse().map(h=>`<div class="row"><div class="g">${h.t} · ${h.d}</div><b>${h.p}%</b></div>`).join(''):'<p class="mut">Hali natija yoʻq</p>'}</div>`;
+else if(ptab=='yut')b=`<div class="card">${ACH.map(a=>`<div class="row" style="opacity:${a[2]()?1:.45}"><div class="ic" style="background:${a[2]()?'#e8a736':'var(--line)'}">★</div><div class="g"><b>${a[0]}</b><div class="mut">${a[1]}</div></div></div>`).join('')}</div>`;
+else b=`<div class="card"><label>Sinf</label><select id="f2">${[6,7,8,9,10,11].map(g=>`<option ${g==S.grade?'selected':''}>${g}</option>`).join('')}</select><label>Viloyat</label><select id="f3">${VIL.map(v=>`<option ${v==S.vil?'selected':''}>${v}</option>`).join('')}</select><label>Tuman / shahar</label><input id="f4" value="${esc(S.tum)}"><button class="btn p" onclick="saveSet()">Saqlash</button><button class="btn g" onclick="S.hours=0;sv={h:0,g:''};save();go('home')">Oʻquv rejasini qayta sozlash</button></div>`;
+app.innerHTML=`<div class="row"><div class="ic" style="width:56px;height:56px;border-radius:50%;background:#7e57c2;font-size:22px">${esc(S.name[0]||'T')}</div><div><h1>${esc(S.name)}</h1><span class="mut">${S.grade}-sinf · ${esc(S.vil)}</span></div></div><div class="tabs">${P.map(t=>`<button class="${ptab==t[0]?'on':''}" onclick="ptab='${t[0]}';render()">${t[1]}</button>`).join('')}</div>`+b}
+function saveSet(){S.grade=+$('#f2').value;S.vil=$('#f3').value;S.tum=$('#f4').value.trim().slice(0,30);save();toast('Saqlandi');render()}
+/* ===== ADMIN ===== */
+function fillT(){const b=(D.bk||[]).find(x=>x[0]==$('#a1').value),e=$('#a2');if(e)e.innerHTML=(b?b[2]:[]).map((t,i)=>`<option value="${i}">${i+1}. ${esc(t)}</option>`).join('')}
+function vAdmin(){const A=[['book','Kitob'],['topic','Mavzu'],['test','Test'],['ch','Kanal'],['bc','Xabar'],['us','Foydalanuvchi']],bk=D.bk||[];
+const sel=on=>`<select id="a1" ${on||''}>${bk.map(b=>`<option value="${b[0]}">${esc(b[1])}</option>`).join('')}</select>`;let f='';
+if(atab=='book')f=`<label>Sinf</label><select id="a1">${[6,7,8,9,10,11].map(g=>`<option>${g}</option>`).join('')}</select><label>Kitob nomi</label><input id="a2" placeholder="Oʻzbekiston tarixi"><label>Yil</label><input id="a3" type="number" value="2025"><button class="btn p" onclick="send({a:'book',g:+$('#a1').value,n:$('#a2').value,y:+$('#a3').value})">Kitob qoʻshish</button>`;
+if(atab=='topic')f=`<label>Kitob</label>${sel()}<label>Mavzu nomi</label><input id="a2"><button class="btn p" onclick="send({a:'topic',b:+$('#a1').value,n:$('#a2').value})">Mavzu qoʻshish</button>`;
+if(atab=='test')f=`<label>Kitob</label>${sel('onchange="fillT()"')}<label>Mavzu</label><select id="a2"></select><label>Testlar (har qator bitta)</label><textarea id="a3" rows="8" placeholder="Savol|Variant A|Variant B|Variant C|Variant D|1"></textarea><p class="mut">Oxirgi raqam – toʻgʻri variant (1–4). Bir yuborishda ~15 ta test.</p><button class="btn p" onclick="send({a:'tests',b:+$('#a1').value,t:+$('#a2').value,txt:$('#a3').value})">Testlarni qoʻshish</button>`;
+if(atab=='ch')f=`<label>Majburiy kanal (@nom)</label><input id="a1" placeholder="@kanal_nomi"><button class="btn p" onclick="send({a:'ch',v:$('#a1').value})">Kanal qoʻshish</button><h2>Hozirgi kanallar</h2>${(D.ch||[]).map(c=>`<div class="row"><div class="g">${esc(c)}</div><button class="opt c" style="width:auto;margin:0" onclick="send({a:'chdel',v:'${esc(c)}'})">Oʻchirish</button></div>`).join('')||'<p class="mut">Kanal yoʻq</p>'}<p class="mut">Bot kanalda admin boʻlishi shart.</p>`;
+if(atab=='bc')f=`<label>Xabar matni</label><textarea id="a1" rows="6"></textarea><p class="mut">Yuborgandan soʻng bot rasm yoki video soʻraydi. Rasm/video tagiga shu matn yoziladi. Faqat matn uchun /skip yozing.</p><button class="btn p" onclick="send({a:'bc',text:$('#a1').value})">Davom etish</button>`;
+if(atab=='us')f=`<p class="mut" style="margin-bottom:8px">Roʻyxat PDF fayl boʻlib botga yuboriladi.</p><button class="btn p" onclick="send({a:'pdf',m:'ph'})">Telefon raqamlar (PDF)</button><button class="btn p" onclick="send({a:'pdf',m:'id'})">ID raqamlar (PDF)</button>`;
+app.innerHTML=`<h1>Admin</h1><div class="tabs">${A.map(t=>`<button class="${atab==t[0]?'on':''}" onclick="atab='${t[0]}';render()">${t[1]}</button>`).join('')}</div><div class="card">${f}</div>`;fillT()}
+render();
+</script></body></html>
